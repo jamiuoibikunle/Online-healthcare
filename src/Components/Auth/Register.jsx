@@ -43,7 +43,7 @@ const Register = () => {
     await setDoc(doc(db, "users", res.user.uid), { email, name, timeStamp: serverTimestamp() })
       .then(() => {
         localStorage.setItem('user', res.user.uid)
-        navigate('/')
+        window.location.reload()
       })
       .catch(() => console.log(Error))
     }

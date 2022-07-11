@@ -1,11 +1,14 @@
-import { TodayRounded, ChatBubbleRounded, HomeRounded, SearchRounded, PersonRounded } from '@material-ui/icons'
+import { TodayRounded, ChatBubbleRounded, HomeRounded, SearchRounded, PersonRounded, VpnKeyRounded } from '@material-ui/icons'
 import styles from './Navigation.module.css'
 
 import React from 'react'
 import {  NavLink } from 'react-router-dom'
 
 const Navigation = () => {
-  return (
+
+  const user = localStorage.getItem('user')
+
+  return user && (
     <div className={styles.nav}>
       <NavLink to='/' className={({ isActive }) => (isActive) ? styles.active : styles.inactive}>
         <HomeRounded />

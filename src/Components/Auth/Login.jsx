@@ -38,7 +38,7 @@ const Login = () => {
 			// Signed in 
 			const user = userCredential.user.uid;
 			localStorage.setItem('user', (user))
-			navigate('/')
+			window.location.reload()
 		})
 		.catch((error) => {
 			const errorCode = error.code;
