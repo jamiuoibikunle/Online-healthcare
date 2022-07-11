@@ -1,0 +1,32 @@
+.container {
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  inset: 0;
+}
+
+.image {
+  width: 80%;
+  margin: auto;
+}
+
+.notfound {
+  margin: auto;
+  width: 100%;
+  height: 25rem;
+}
+
+.back {
+  padding: 1rem;
+  margin: 1rem auto;
+  width: fit-content;
+  background-color: rgb(37 99 235);
+  color: white;
+  border-radius: 0.5rem;
+}
+
+.link {
+  color: white;
+  text-decoration: none;
+}

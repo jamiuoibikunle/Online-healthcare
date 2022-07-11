@@ -1,0 +1,22 @@
+.nav {
+  color: grey;
+  background-color: white;
+  width: 100vw;
+  max-width: 800px;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  flex-direction: row;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.active {
+  color: black;
+}
