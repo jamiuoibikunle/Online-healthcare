@@ -1,7 +1,7 @@
 import styles from './Profile.module.css'
 
 import React from 'react'
-import { PersonRounded, LocationOn, HelpOutlined, ForumRounded, CallRounded, SendRounded } from '@material-ui/icons'
+import { AccountBalanceWalletRounded ,PersonRounded, LocationOn, HelpOutlined, ForumRounded, CallRounded, SendRounded, DeleteRounded } from '@material-ui/icons'
 
 const Profile = () => {
   return (
@@ -10,7 +10,7 @@ const Profile = () => {
 		This page is under development
 	  </div> */}
 		<section className={styles.welcome}>
-			Hello, User
+			Hello, Elijah
 		</section>
 		<section className={styles.list}>
 			<div>
@@ -24,6 +24,15 @@ const Profile = () => {
 			</div>
 			<div>
 				<ForumRounded /> Feedback
+			</div>
+			<div>
+				<AccountBalanceWalletRounded /> Donate
+			</div>
+			<div onClick={() => {
+                localStorage.clear();
+                window.location.reload()
+            }}>
+				<DeleteRounded /> Sign out
 			</div>
 		</section>
 		<section>
@@ -42,11 +51,11 @@ const Profile = () => {
 			</div>
 			</div>
 		</section>
-		<section className={styles.logout}>
+		{/* <section className={styles.logout}>
 			<button>
 				Log out
 			</button>
-		</section>
+		</section> */}
 	</div>
   )
 }

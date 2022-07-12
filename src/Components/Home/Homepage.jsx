@@ -53,7 +53,8 @@ const Homepage = () => {
 
 	}, [user])
 
-	return details.name ? (
+	// return details.name ? (
+        return (
 		<div className={styles.homewrapper}>
 			<div className={styles.header}>
 				<div className={styles.greeting}>
@@ -72,8 +73,10 @@ const Homepage = () => {
 				</div> */}
 			</div>
 		</div>
-	) : (
-			<CircularProgress className={styles.progress} />
-	)}
+	) 
+    // : (
+	// 		<CircularProgress className={styles.progress} />
+	// )
+}
 
 export default Homepage
