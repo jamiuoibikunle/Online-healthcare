@@ -11,7 +11,8 @@
 }
 
 .header {
-  background: url(./headerbackground.svg);
+  /* background: url(./headerbackground.svg); */
+  background-color: rgb(37, 100, 235);
   padding: 3rem 1rem;
 }
 

@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect } from 'react';
 import { db } from '../../firebase';
 import { useState } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import styles from './Homepage.module.css'
+import { AppContext } from '../../App';
 
 const Homepage = () => {
+
+    const context = useContext(AppContext)
 
 	const user = localStorage.getItem('user')
 	const [ details, setDetails ] = useState({})
@@ -19,20 +22,21 @@ const Homepage = () => {
 	
 		if (docSnap.exists()) {
 			setDetails(docSnap.data())
+            context.setUserDetails(docSnap.data())
 		} else {
-			// doc.data() will be undefined in this case
-			console.log("No such document!");
+            localStorage.clear()
+            window.location.reload()
 		}
 	}
 
-	console.log(new Date().getHours());
+    getName()
 
 	useEffect(() => {
-		getName()
 
 		const getTime = () => {
 
 			const hour = new Date().getHours()
+            // const hour = 10
 
 			if ( hour > 0 && hour < 12 ) {
 				setGreetings('Good morning')
@@ -51,14 +55,14 @@ const Homepage = () => {
 
 		getTime()
 
-	}, [user])
+	}, [ user ])
 
 	// return details.name ? (
         return (
 		<div className={styles.homewrapper}>
 			<div className={styles.header}>
 				<div className={styles.greeting}>
-					{greetings}, {details.name}
+					{greetings}, {context.userDetails.name}
 				</div>
 				<div className={styles.welcome}>
 					Welcome back

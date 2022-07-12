@@ -1,18 +1,22 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../firebase';
 import Typewriter from 'typewriter-effect';
-import { Checkbox } from '@material-ui/core'
+import { Checkbox, CircularProgress } from '@material-ui/core'
 import { ArrowForwardIosOutlined } from '@material-ui/icons'
 import styles from './Auth.module.css'
 import { useEffect } from 'react';
+import { AppContext } from '../../App';
 
 const Login = () => {
+
+    const context = useContext(AppContext)
 
 	const [ email, setEmail ] = useState('')
 	const [ password, setPassword ] = useState('')
 	const [ isError, setIsError ] = useState(false)
+	const [ signIn, setSignIn ] = useState('Sign In')
 
 	const navigate = useNavigate()
 
@@ -32,21 +36,39 @@ const Login = () => {
 	const handleLogin = async (e) => {
 
 		e.preventDefault()
+
+        if ( password.length === 0 || email.length === 0 ) {
+            alert('Kindly fill in your details to proceed')
+            return
+        }
+
+        setSignIn(<CircularProgress fontSize='small' />)
+
+        setTimeout(() => {
+            alert('Seems your network connection is bad. Please try again.')
+            setSignIn('Sign In')
+            return
+        }, 10000);
  
 		await signInWithEmailAndPassword(auth, email, password)
 		.then((userCredential) => {
+            console.log(userCredential);
+            console.log(context);
+            // context.handleDetails(userCredential)
 			// Signed in 
+            setSignIn('Redirecting')
 			const user = userCredential.user.uid;
 			localStorage.setItem('user', (user))
 			window.location.reload()
 		})
 		.catch((error) => {
+            setSignIn('Incorrect credentials')
 			const errorCode = error.code;
 			const errorMessage = error.message;
 			console.log(error);
 			setIsError(true);
-			alert('Your credentials are incorrect')
 		});
+
 	}
 
 		return (
@@ -86,7 +108,7 @@ const Login = () => {
 						</span>
 					</div>
 					<div className={styles.submit}>
-							Sign In
+							{signIn}
 					<button type='submit'>
 						<ArrowForwardIosOutlined className={styles.arrow} />
 					</button>
