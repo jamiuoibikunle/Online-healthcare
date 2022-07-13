@@ -1,18 +1,16 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from '../../firebase';
+import { auth, db } from '../firebase';
 import Typewriter from 'typewriter-effect';
 import { Checkbox, CircularProgress } from '@material-ui/core'
 import { ArrowForwardIosOutlined } from '@material-ui/icons'
-import styles from './Auth.module.css'
+import styles from './Clinic.module.css'
 import { useEffect } from 'react';
-import { AppContext } from '../../App';
-import { collection, getDocs } from 'firebase/firestore';
+// import { AppContext } from '../App';
+import { collection, getDocs } from "firebase/firestore";
 
-const Login = () => {
-
-    const context = useContext(AppContext)
+const ClinicLogin = () => {
 
 	const [ email, setEmail ] = useState('')
 	const [ password, setPassword ] = useState('')
@@ -56,9 +54,9 @@ const Login = () => {
         // }, 10000);
  
 		await signInWithEmailAndPassword(auth, email, password)
-        .then( async (userCredential) => {
+		.then( async (userCredential) => {
             console.log('Logged in')
-            const querySnapshot = await getDocs(collection(db, "users"));
+            const querySnapshot = await getDocs(collection(db, "clinics"));
             querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             console.log(doc.id, " => ", doc.data());
@@ -68,7 +66,7 @@ const Login = () => {
                 // Signed in 
                 setSignIn('Redirecting')
                 const user = userCredential.user.uid;
-                localStorage.setItem('user', (user))
+                localStorage.setItem('clinic', (user))
                 window.location.reload()
 
             } else {
@@ -77,6 +75,7 @@ const Login = () => {
             }
 
             });
+
 		})
 		.catch((error) => {
             setSignIn('Incorrect credentials')
@@ -101,7 +100,7 @@ const Login = () => {
 				}}
 
 				onInit={(typewriter) => {
-					typewriter.typeString('Book an appointment with a doctor today. Save time, use BooQiT.')
+					typewriter.typeString('Make scheduling of appointments easier for patients today. Save time, use BooQiT.')
 					.pauseFor(2500)
 					.deleteAll()
 					.start();
@@ -133,7 +132,7 @@ const Login = () => {
 					</button>
 					</div>
 				</form>
-				<button className={styles.btn2} onClick={() => navigate('/auth/register')}>
+				<button className={styles.btn2} onClick={() => navigate('/clinic/register')}>
 					Sign up
 				</button>
 			</section>
@@ -165,4 +164,4 @@ const Login = () => {
 	)
 }
 
-export default Login
+export default ClinicLogin

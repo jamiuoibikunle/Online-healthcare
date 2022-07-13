@@ -1,16 +1,16 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from '../../firebase';
+import { auth, db } from '../firebase';
 import Typewriter from 'typewriter-effect';
 import { Checkbox, CircularProgress } from '@material-ui/core'
 import { ArrowForwardIosOutlined } from '@material-ui/icons'
 import styles from './Auth.module.css'
 import { useEffect } from 'react';
-import { AppContext } from '../../App';
+import { AppContext } from '../App';
 import { collection, getDocs } from 'firebase/firestore';
 
-const Login = () => {
+const DoctorLogin = () => {
 
     const context = useContext(AppContext)
 
@@ -58,7 +58,7 @@ const Login = () => {
 		await signInWithEmailAndPassword(auth, email, password)
         .then( async (userCredential) => {
             console.log('Logged in')
-            const querySnapshot = await getDocs(collection(db, "users"));
+            const querySnapshot = await getDocs(collection(db, "doctors"));
             querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             console.log(doc.id, " => ", doc.data());
@@ -68,7 +68,7 @@ const Login = () => {
                 // Signed in 
                 setSignIn('Redirecting')
                 const user = userCredential.user.uid;
-                localStorage.setItem('user', (user))
+                localStorage.setItem('doctor', (user))
                 window.location.reload()
 
             } else {
@@ -101,7 +101,7 @@ const Login = () => {
 				}}
 
 				onInit={(typewriter) => {
-					typewriter.typeString('Book an appointment with a doctor today. Save time, use BooQiT.')
+					typewriter.typeString('Connect faster and easier with your patients. Save time, use BooQiT.')
 					.pauseFor(2500)
 					.deleteAll()
 					.start();
@@ -133,7 +133,7 @@ const Login = () => {
 					</button>
 					</div>
 				</form>
-				<button className={styles.btn2} onClick={() => navigate('/auth/register')}>
+				<button className={styles.btn2} onClick={() => navigate('/doctor/register')}>
 					Sign up
 				</button>
 			</section>
@@ -165,4 +165,4 @@ const Login = () => {
 	)
 }
 
-export default Login
+export default DoctorLogin

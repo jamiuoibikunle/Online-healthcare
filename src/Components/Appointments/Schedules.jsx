@@ -76,7 +76,7 @@ const Schedules = () => {
 
 						// Get reference to the DB
 
-						const docRef = doc(db, "UCH", "appointments", "days", selected);
+						const docRef = doc(db, "University College Hospital", "appointments", "days", selected);
 						const docSnap = await getDoc(docRef);
 
 						console.log(docSnap.data())
@@ -165,7 +165,7 @@ const Schedules = () => {
 							let pickedDate = dateSelected + '|' + (new Date().getMonth() + 1) + '|' + new Date().getFullYear()
 							pickedDate = String(pickedDate)
 
-							const docRef = doc(db, "UCH", "appointments", "days", pickedDate, "times", each);
+							const docRef = doc(db, "University College Hospital", "appointments", "days", pickedDate, "times", each);
 							const docSnap = await getDoc(docRef)
 
 							if (docSnap.data() && docSnap.data()[each]) {
@@ -233,7 +233,7 @@ const Schedules = () => {
 						let dateDetails = {}
 						dateDetails[timeSelected] = [ ...existingUsers, localStorage.getItem('user') ]
 						
-						setDoc(doc(db, "UCH", "appointments", "days", pickedDate, "times", timeSelected), dateDetails)
+						setDoc(doc(db, "University College Hospital", "appointments", "days", pickedDate, "times", timeSelected), dateDetails)
 						.then(() => console.log('Updated'))
 						.then(() => {
 							

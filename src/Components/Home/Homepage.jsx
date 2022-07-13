@@ -12,7 +12,6 @@ const Homepage = () => {
     const context = useContext(AppContext)
 
 	const user = localStorage.getItem('user')
-	const [ details, setDetails ] = useState({})
 	const [ greetings, setGreetings ] = useState('')
 
 	const getName = async () => {
@@ -21,7 +20,6 @@ const Homepage = () => {
 		const docSnap = await getDoc(docRef);
 	
 		if (docSnap.exists()) {
-			setDetails(docSnap.data())
             context.setUserDetails(docSnap.data())
 		} else {
             localStorage.clear()
@@ -30,32 +28,6 @@ const Homepage = () => {
 	}
 
     getName()
-
-	// useEffect(() => {
-
-	// 	const getTime = () => {
-
-	// 		const hour = new Date().getHours()
-    //         // const hour = 10
-
-	// 		if ( hour > 0 && hour < 12 ) {
-	// 			setGreetings('Good morning')
-	// 		} else if ( hour > 11 && hour < 16 ) {
-	// 			setGreetings('Good afternoon')
-	// 		} else {
-	// 			setGreetings('Good evening')
-	// 		}
-
-	// 		// if ( 12 > hour > 0 ) setGreetings('Good morning')
-	// 		// if ( 16 > hour > 11 ) setGreetings('Good afternoon')
-	// 		// if ( 23  hour > 11 ) setGreetings('Good afternoon')
-	// 		// else setGreetings('Good evening')
-
-	// 	}
-
-	// 	getTime()
-
-	// }, [ user ])
 
 	return context.userDetails ? (
         // return (

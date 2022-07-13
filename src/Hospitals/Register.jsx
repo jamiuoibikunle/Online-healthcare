@@ -4,17 +4,18 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import Typewriter from 'typewriter-effect';
 import { Checkbox, CircularProgress } from '@material-ui/core'
 import { ArrowForwardIosOutlined } from '@material-ui/icons'
-import styles from './Auth.module.css'
-import { auth, db } from '../../firebase';
+import styles from './Clinic.module.css'
+import { auth, db } from '../firebase';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-const Register = () => {
+const ClinicRegister = () => {
 
     const [ email, setEmail ] = useState('')
     const [ name, setName ] = useState('')
     const [ password, setPassword ] = useState('')
+    const [ address, setAddress ] = useState('')
 
     const [ signUp, setSignUp ] = useState('Sign Up')
 
@@ -35,6 +36,10 @@ const Register = () => {
 
     const handleName = (e) => {
         setName(e.target.value)
+    }
+
+    const handleAddress = (e) => {
+        setAddress(e.target.value)
     }
 
     const handlePassword = (e) => {
@@ -59,10 +64,10 @@ const Register = () => {
         }, 10000);
 
         const res = await createUserWithEmailAndPassword(auth, email, password)
-        await setDoc(doc(db, "users", res.user.uid), { email, name, timeStamp: serverTimestamp() })
+        await setDoc(doc(db, "clinics", res.user.uid), { email, name, address, timeStamp: serverTimestamp() })
         .then(() => {
             setSignUp('Redirecting')
-            localStorage.setItem('user', res.user.uid)
+            localStorage.setItem('clinic', res.user.uid)
             window.location.reload()
         })
         .catch((error) => setSignUp('Please try again'))
@@ -96,8 +101,9 @@ const Register = () => {
             Get Started
             </header>
             <form onSubmit={handleRegister}>
-            <input type='name' placeholder='Name' onChange={handleName} />
-            <input type='email' placeholder='Email' onChange={handleEmail} />
+            <input type='name' placeholder='Clinic Name' onChange={handleName} />
+            <input type='email' placeholder='Email Address' onChange={handleEmail} />
+            <input type='name' placeholder='Address' onChange={handleAddress} />
             <input type='password' placeholder='Password' onChange={handlePassword} />
             <span>
                 <Checkbox color='primary' />I agree to the Terms of Service and Privacy Policy
@@ -111,7 +117,7 @@ const Register = () => {
                         </button>
                         </div>
             </form>
-            <button className={styles.btn2} onClick={() => navigate('/auth/login')}>  
+            <button className={styles.btn2} onClick={() => navigate('/clinic/login')}>  
                 Sign in
             </button>
         </section>
@@ -143,4 +149,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default ClinicRegister

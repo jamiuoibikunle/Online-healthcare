@@ -124,7 +124,7 @@ body {
     background-color: transparent;
     border: none;
     outline: none;
-    animation: btn 7s infinite forwards ease-in-out;
+    /* animation: btn 7s infinite forwards ease-in-out; */
 }
 
 .arrow {
