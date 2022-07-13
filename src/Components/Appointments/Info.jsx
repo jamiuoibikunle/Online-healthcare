@@ -1,12 +1,8 @@
 import { ArrowBackIosRounded, LocationOnRounded } from '@material-ui/icons'
-// import { useNavigate } from 'react-router-dom'
 import UCH from '../Resources/UCH.jpg'
 import styles from './Appointments.module.css'
 
 const Info = ({ GoBack }) => {
-
-  // const navigate = useNavigate()
-  // const handleBack = () => { navigate(-1)}
 
   return (
     <main>

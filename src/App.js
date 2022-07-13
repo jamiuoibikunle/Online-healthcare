@@ -22,23 +22,19 @@ import ClinicSchedules from "./Hospitals/Schedules";
 import ClinicHome from "./Hospitals/ClinicHome";
 
 // Doctor imports
-import DoctorHome from "./Doctors/DoctorHome";
+import DoctorDiscover from "./Doctors/Discover";
 import DoctorChats from "./Doctors/DoctorChats";
 import DoctorProfile from "./Doctors/Profile";
 import DoctorRegister from "./Doctors/Register";
 import DoctorLogin from "./Doctors/Login";
+import DoctorMessages from "./Doctors/DoctorMessages";
+import ClinicSettings from "./Hospitals/Settings";
 
 const AppContext = createContext()
 
 export default function App() {
 
     const [ userDetails, setUserDetails ] = useState()
-
-    // const handleDetails = (props) => {
-    //     setUserDetails(props)
-    // }
-
-    // userDetails && localStorage.setItem('auth', JSON.stringify(userDetails))
 
     const RequireAuth = ({ children }) => {
         const user = localStorage.getItem('user')
@@ -78,13 +74,17 @@ export default function App() {
             <Route path="/clinic" element={<RequireClinic><ClinicHome /></RequireClinic>} />
             <Route path="/clinic/profile" element={<RequireClinic><ClinicProfile /></RequireClinic>} />
             <Route path="/clinic/appointments" element={<RequireClinic><ClinicSchedules /></RequireClinic>} />
+            <Route path="/clinic/settings" element={<RequireClinic><ClinicSettings /></RequireClinic>} />
             
             {/* Routes for doctors */}
-            <Route path="/doctor" element={<RequireDoctor><DoctorHome /></RequireDoctor>} />
-            <Route path="/doctor/chats" element={<RequireDoctor><DoctorChats /></RequireDoctor> } />
+            <Route path="/doctor/discover" element={<RequireDoctor><DoctorDiscover /></RequireDoctor>} />
+            <Route path="/doctor/chats" element={<RequireDoctor><DoctorMessages /></RequireDoctor> } />
+            <Route path="/doctor/chats/:chatid" element={<RequireDoctor><DoctorChats /></RequireDoctor> } />
             <Route path="/doctor/profile" element={<RequireDoctor><DoctorProfile /></RequireDoctor>} />
             <Route path="/doctor/register" element={<DoctorRegister />} />
             <Route path="/doctor/login" element={<DoctorLogin />} />
+
+            {/* Error page */}
             <Route path="*" element={<NotFound />} />
         </Routes>
         <Navigation />

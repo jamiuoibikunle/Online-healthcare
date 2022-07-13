@@ -85,7 +85,6 @@ const DoctorProfile = () => {
             () => {
                 getDownloadURL(uploadTask.snapshot.ref)
                 .then((downloadURL) => {
-                // console.log('File available at', downloadURL);
                 setUrl(downloadURL)
                 setIsLoading(false)
                 })
@@ -111,6 +110,7 @@ const DoctorProfile = () => {
         .then(() => window.location.reload())
         .catch((error) => console.log(error))
         .catch(() => setIsLoading(false))
+        .catch(() => alert('One of the fields above is empty'))
     }
     
     useEffect(() => {
@@ -138,7 +138,7 @@ const DoctorProfile = () => {
     <main className={styles.edit}>
         <header>
             <div className={styles.arrowback}>
-                <ArrowBack onClick={() => navigate('/doctor')} />
+                <ArrowBack onClick={() => navigate('/doctor/discover')} />
             </div>
             <div className={styles.pictureandname}>
                 <div className={styles.avatar}>

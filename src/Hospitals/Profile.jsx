@@ -85,7 +85,6 @@ const ClinicProfile = () => {
             () => {
                 getDownloadURL(uploadTask.snapshot.ref)
                 .then((downloadURL) => {
-                // console.log('File available at', downloadURL);
                 setUrl(downloadURL)
                 setIsLoading(false)
                 })
@@ -112,6 +111,7 @@ const ClinicProfile = () => {
         .catch((error) => {
             console.log(error)
             setIsLoading(false)
+            alert('One of the fields above is empty')
         })
     }
     
@@ -139,9 +139,6 @@ const ClinicProfile = () => {
   return context.userDetails ? (
     <main className={styles.edit}>
         <header>
-            <aside>
-                <ArrowBackIosRounded className={styles.arrowback} onClick={() => navigate('/clinic')} />
-            </aside>
             <div className={styles.pictureandname}>
                 <div className={styles.avatar}>
                     <img src={url ? url : avatar} />

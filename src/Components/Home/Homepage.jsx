@@ -30,7 +30,6 @@ const Homepage = () => {
     getName()
 
 	return context.userDetails ? (
-        // return (
 		<div className={styles.homewrapper}>
 			<div className={styles.header}>
 				<div className={styles.greeting}>
@@ -39,14 +38,6 @@ const Homepage = () => {
 				<div className={styles.welcome}>
 					Welcome back
 				</div>
-				{/* <div className={styles.finddoctor}>
-					<span>
-						Find your doctor
-					</span>
-					<span>
-						See all
-					</span>
-				</div> */}
 			</div>
 		</div>
 	) 

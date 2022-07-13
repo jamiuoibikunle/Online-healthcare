@@ -35,15 +35,8 @@ const ClinicSchedules = () => {
 
             const querySnapshot = await getDocs(collection(db, "University College Hospital", "appointments", "days", date, "times"));
             querySnapshot.forEach((doc) => {
-              // doc.data() is never undefined for query doc snapshots
-
               console.log(doc.data());
               setAppointments(appointments => [ ...appointments, doc.data() ])
-            //   setAppointments([ ...appointments, { time: doc.id, users: doc.data() } ])
-              
-            //   const docID = doc.id.replaceAll('|', '/')
-            //   if (appointments.includes(docID)) return 
-            //   setAppointments(appointments => [ ...appointments, { date: docID, time: doc.data().time } ])
         });
         
     }
@@ -107,7 +100,7 @@ const ClinicSchedules = () => {
   return render ? (
     <main className={styles.scheduleswrapper}>
         <header className={styles.clinicname}>
-            <ArrowBack onClick={() => navigate('/clinic')} /> {context.userDetails && context.userDetails.name}
+            {context.userDetails && context.userDetails.name}
         </header>
         <section className={styles.listofappointments}>
 

@@ -24,9 +24,9 @@ const DoctorRegister = () => {
 		const user = localStorage.getItem('user');
 		user && navigate('/')
 		const clinic = localStorage.getItem('clinic');
-		clinic && navigate('/clinic')
+		clinic && navigate('/clinic/appointments')
 		const doctor = localStorage.getItem('doctor');
-		doctor && navigate('/doctor')
+		doctor && navigate('/doctor/discover')
     })
 
     const handleEmail = (e) => {

@@ -1,9 +1,3 @@
-.progress {
-    position: absolute;
-    margin: auto;
-    inset: 0;
-  }
-
 .wrapper {
     max-width: 800px;
     margin: auto;

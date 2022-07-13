@@ -111,6 +111,7 @@ const EditProfile = () => {
         .then(() => window.location.reload())
         .catch((error) => console.log(error))
         .catch(() => setIsLoading(false))
+        .catch(() => alert('One of the fields above is empty'))
     }
     
     useEffect(() => {
