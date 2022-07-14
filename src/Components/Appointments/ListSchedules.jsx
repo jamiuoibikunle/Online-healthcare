@@ -16,10 +16,6 @@ const List = ({ GoForward, appointments }) => {
 			  {/* {each.hospital} */}
 				University College Hospital
 			</div>
-			<div className={styles.department}>
-			{/* {each.department} */}
-			Gynaecology
-			</div>
 			<section className={styles.timeinfo}>
 			  <div className={styles.eachtimeinfo}>
 				<DateRangeRounded color='inherit' /> {each.date}

@@ -1,142 +1,77 @@
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from '../../firebase'
 import styles from './Messages.module.css'
 import avatar from './avatar.png'
 import { SearchRounded } from '@material-ui/icons'
+import { CircularProgress } from "@material-ui/core";
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Messages = () => {
-    return (
+
+    const [ messages, setMessages ] = useState([])
+    
+    const navigate = useNavigate()
+
+    useEffect(() => {
+
+        const getMessages = async () => {
+            
+        const querySnapshot = await getDocs(collection(db, "conversations"));
+        querySnapshot.forEach((doc) => {
+
+          const user = localStorage.getItem('user')
+          const data = JSON.parse(doc.id)
+          console.log(data);
+          console.log(data.length)
+          if (data.includes(user)) {
+            if (messages.find( e => e.id === doc.id )) return
+              const remoteuser = data.filter( each => each !== user )
+                setMessages(messages => [ ...messages, { id: doc.id, lastMessage: doc.data().last_message, user: doc.data()[remoteuser] } ])
+            }
+        });
+        
+    }
+    
+    getMessages()
+    
+    }, [])
+
+    console.log(messages);
+
+    return messages.length !== 0 ? (
 	    <div className={styles.wrapper}>
-            {/* <div className={styles.underdevelopment}>
-                This page is under development
-            </div> */}
         <div className={styles.search}>
-            <input placeholder='Search message' />
-            <SearchRounded className={styles.searchicon} />
+            {/* <input placeholder='Search message' />
+            <SearchRounded className={styles.searchicon} /> */}
         </div>
         <section className={styles.messages}>
             
-            <div className={styles.individual}>
-
-                <img src={avatar} />
-                <div className={styles.center}>
-                    <div className={styles.name}>
-                        Sebastian Rudiger
+            {
+                messages.map((message) => (
+                    <div className={styles.individual} key={message.id} onClick={() => navigate('/chats/' + message.id )}>
+                        <img src={message.user.profilepic || avatar} />
+                        <div className={styles.center}>
+                        <div className={styles.name}>
+                            {message.user.name}
+                        </div>
+                        <div className={styles.lastmessage}>
+                            { message.lastMessage.sender === localStorage.getItem('user') ? <b>Me:</b> : '' } {message.lastMessage.text}
+                        </div>
+                        </div>
+                        <div className={styles.time}>
+                            09:25 PM
+                        </div>
                     </div>
-                    <div className={styles.lastmessage}>
-                        What do you think eh?
-                    </div>
-                </div>
-                <div className={styles.time}>
-                    09:25 PM
-                </div>
 
-            </div>
-
-            <div className={styles.individual}>
-
-                <img src={avatar} />
-                <div className={styles.center}>
-                    <div className={styles.name}>
-                        Ngozi Affar
-                    </div>
-                    <div className={styles.lastmessage}>
-                        All right have a great...
-                    </div>
-                </div>
-                <div className={styles.time}>
-                    12:00 PM
-                </div>
-
-            </div>
-
-            <div className={styles.individual}>
-
-                <img src={avatar} />
-                <div className={styles.center}>
-                    <div className={styles.name}>
-                        Dr Ramsak
-                    </div>
-                    <div className={styles.lastmessage}>
-                        Saving lives bring me joy
-                    </div>
-                </div>
-                <div className={styles.time}>
-                    09:25 PM
-                </div>
-
-            </div>
-
-            <div className={styles.individual}>
-
-                <img src={avatar} />
-                <div className={styles.center}>
-                    <div className={styles.name}>
-                        Dr Sebastian Rudiger
-                    </div>
-                    <div className={styles.lastmessage}>
-                        How high is your temp...
-                    </div>
-                </div>
-                <div className={styles.time}>
-                    09:25 PM
-                </div>
-
-            </div>
-
-            <div className={styles.individual}>
-
-                <img src={avatar} />
-                <div className={styles.center}>
-                    <div className={styles.name}>
-                        Dr Rudiger
-                    </div>
-                    <div className={styles.lastmessage}>
-                        Im glad you feel fine now
-                    </div>
-                </div>
-                <div className={styles.time}>
-                    09:25 PM
-                </div>
-
-            </div>
-
-            <div className={styles.individual}>
-
-                <img src={avatar} />
-                <div className={styles.center}>
-                    <div className={styles.name}>
-                        Mohammed Arnold MD
-                    </div>
-                    <div className={styles.lastmessage}>
-                        That's great then
-                    </div>
-                </div>
-                <div className={styles.time}>
-                    11:25 AM
-                </div>
-
-            </div>
-
-            <div className={styles.individual}>
-
-                <img src={avatar} />
-                <div className={styles.center}>
-                    <div className={styles.name}>
-                        Dr Caroline Varsaha
-                    </div>
-                    <div className={styles.lastmessage}>
-                        Thanks doc!
-                    </div>
-                </div>
-                <div className={styles.time}>
-                    03:10 PM
-                </div>
-
-            </div>
+            ))
+            }
 
         </section>
         </div>
+  ) : (
+    <CircularProgress className={styles.progress} />
   )
 }
 

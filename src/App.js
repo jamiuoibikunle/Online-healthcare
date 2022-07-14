@@ -29,6 +29,7 @@ import DoctorRegister from "./Doctors/Register";
 import DoctorLogin from "./Doctors/Login";
 import DoctorMessages from "./Doctors/DoctorMessages";
 import ClinicSettings from "./Hospitals/Settings";
+import ChatsScreen from "./Components/Messages/ChatsScreen";
 
 const AppContext = createContext()
 
@@ -66,6 +67,7 @@ export default function App() {
             <Route path="/appointments" element={<RequireAuth><Appointments /></RequireAuth>} />
             <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
             <Route path="/chats" element={<RequireAuth><Messages /></RequireAuth>} />
+            <Route path="/chats/:chatId" element={<RequireAuth><ChatsScreen /></RequireAuth>} />
             <Route path="/discover" element={<RequireAuth><Discover /></RequireAuth>} />
             
             {/* Routes for hospitals */}

@@ -7,11 +7,15 @@ import { db } from '../firebase'
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore'
 import avatar from './avatar.jpg'
 
+import { useNavigate } from 'react-router-dom'
+
 const Discover = () => {
 
     const context = useContext(AppContext)
 
     const [ users, setUsers ] = useState([])
+
+    const navigate = useNavigate()
 
     const getUsers = async () => {
         const querySnapshot = await getDocs(collection(db, "users"));
@@ -34,8 +38,13 @@ const Discover = () => {
             </section>
             <section className={styles.list}>
                 {
-                    users.map((each) => (
-                        <div className={styles.individual} key={each.id}>
+                    users.map((each) => {
+
+                        const linkToChat = JSON.stringify([ each.id, localStorage.getItem('doctor') ])
+                        console.log(linkToChat);
+
+                        return (
+                        <div className={styles.individual} key={each.id} onClick={() => navigate('/doctor/chats/' + linkToChat)}>
                             <img src={each.profilepic || avatar} />
                             <div className={styles.center}>
                             <div className={styles.name}>
@@ -49,7 +58,7 @@ const Discover = () => {
                             <Telegram />
                         </div>
                     </div>
-                    ))
+                    )})
             }
             </section>
         </main>

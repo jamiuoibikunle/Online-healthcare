@@ -2,6 +2,7 @@ import avatar from './1.png'
 import styles from './Discover.module.css'
 
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { CallRounded, Telegram } from '@material-ui/icons'
 import { collection, doc, getDocs } from 'firebase/firestore'
 import { db } from '../../firebase'
@@ -11,7 +12,7 @@ const Discover = () => {
 
     const [ doctors, setDoctors ] = useState([])
 
-    console.log(doctors);
+    const navigate = useNavigate()
     
 
     useEffect(() => {
@@ -35,26 +36,32 @@ const Discover = () => {
             </header>
             <section className={styles.list}>
                 {
-                    doctors.map((doctor) => (
+                    doctors.map((doctor) => {
+                    
+                        const linkToChat = JSON.stringify([ localStorage.getItem('user'), doctor.id ])
+                        console.log(linkToChat);
 
-                        <div className={styles.individual}>
-                    <img src={doctor.profilepic || avatar} />
-                    <div className={styles.center}>
-                        <div className={styles.name}>
-                            Dr {doctor.name}
+                        console.log(doctor);
+                        return (
+
+                            <div key={doctor.id} className={styles.individual} onClick={() => navigate('/chats/' + linkToChat)}>
+                            <img src={doctor.profilepic || avatar} />
+                            <div className={styles.center}>
+                                <div className={styles.name}>
+                                    Dr {doctor.name}
+                                </div>
+                                {/* <div className={styles.specialty}>
+                                    
+                                </div> */}
+                                <div className={styles.almamater}>
+                                    {doctor.address || ''}
+                                </div>
+                            </div>
+                            <div className={styles.clinic}>
+                                <Telegram />
+                            </div>
                         </div>
-                        {/* <div className={styles.specialty}>
-                            
-                        </div> */}
-                        <div className={styles.almamater}>
-                            {doctor.address || ''}
-                        </div>
-                    </div>
-                    <div className={styles.clinic}>
-                        <Telegram />
-                    </div>
-                </div>
-                ))}
+                )})}
 
             </section>
 	    </div>

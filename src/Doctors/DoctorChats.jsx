@@ -1,108 +1,181 @@
-import styles from './Doctor.module.css'
+import { collection, setDoc, getDocs, doc, getDoc, addDoc, serverTimestamp, onSnapshot, orderBy, query, limit, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import styles from './ChatsScreen.module.css'
 import avatar from './avatar.jpg'
-import { ArrowBackIosRounded, ArrowBack, Telegram } from '@material-ui/icons'
+import { ArrowBack, Telegram } from '@material-ui/icons'
 
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState, useRef } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { CircularProgress } from "@material-ui/core";
 
 const DoctorChats = () => {
 
     const navigate = useNavigate()
 
-  return (
+    const [ texts, setTexts ] = useState([])
+    const [ messageToSend, setMessageToSend ] = useState('')
+    const [ remoteuser, setRemoteuser ] = useState()
+    const [ mydetails, setmydetails ] = useState()
+
+    const params = useParams()
+    const chatId = params.chatid
+
+    const scrollRef = useRef()
+    
+    const myUser = localStorage.getItem('doctor')
+
+    useEffect(() => {
+
+        const q = query(collection(db, "conversations", chatId, "messages"), orderBy('timestamp', 'asc'), limit(200));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const list = [];
+        querySnapshot.forEach((doc) => {
+            list.push({ id: doc.id, text: doc.data().message.text, sender: doc.data().message.sender, timeStamp: doc.data().message.timestamp.seconds })
+        }, (error) => console.log(error))
+
+        setTexts(list)
+        });
+
+        return () => {
+            unsubscribe()
+          }
+}, [])
+
+useEffect(() => {
+
+    const getName = async () => {
+
+        let userId = JSON.parse(chatId)
+        userId = userId.find( e => e !== localStorage.getItem('user') )
+        console.log(userId);
+
+        const docRef = doc(db, "users", userId);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          setRemoteuser({
+            user: docSnap.data()
+        })
+    } else {
+        console.log("Not found in users. Searching inside doctors.");
+        
+        const docRef = doc(db, "doctors", userId);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data());
+            setRemoteuser({
+              user: docSnap.data()
+          })
+        } else {
+            console.log("User not found anywhere");
+                }
+            }
+
+    }
+
+    getName()
+
+}, [])
+
+useEffect(() => {
+    scrollRef.current?.scrollIntoView({behaviour: 'smooth'})
+}, [texts])
+
+useEffect(() => {
+
+    const fetchMyData = async () => {
+      
+        const fetchRef = doc(db, "doctors", localStorage.getItem('doctor'));
+        const docSnap = await getDoc(fetchRef);
+        
+        if (docSnap.exists()) {
+              setmydetails(docSnap.data())
+          } else {
+              // doc.data() will be undefined in this case
+              console.log("No such document!");
+          }
+      }
+
+  fetchMyData()
+
+}, [])
+
+const handleSend = async () => {
+
+    const docRef = await addDoc(collection(db, "conversations", chatId, "messages"), {
+        message: {
+            text: messageToSend,
+            sender: myUser,
+            timestamp: serverTimestamp()
+        },
+        timestamp: serverTimestamp()
+      })
+
+      const viewRef = doc(db, "conversations", chatId);
+
+      let userId = JSON.parse(chatId)
+      userId = userId.find( e => e !== localStorage.getItem('doctor') )
+
+      let updatedData = {}
+      updatedData['last_message'] = {
+          sender: myUser,
+          text: messageToSend
+      }
+      updatedData[userId] = {
+          name: remoteuser.user.name,
+          profilepic: remoteuser.user.profilepic || ''
+        }
+        updatedData[localStorage.getItem('user')] = {
+            name: mydetails.name,
+            profilepic: mydetails.profilepic || ''
+        }
+
+      await setDoc(viewRef, updatedData
+      );
+
+      setMessageToSend('')
+}
+
+return remoteuser ? (
     <main className={styles.chatswrapper}>
         <header className={styles.header}>
-            <ArrowBack onClick={() => navigate('/doctor')} />
-            <img src={avatar} className={styles.avatar} />
-            Abarahamovic
+            <ArrowBack onClick={() => navigate(-1)} />
+            <img src={remoteuser.user.profilepic || avatar} className={styles.avatar} />
+            {remoteuser.user.name || 'Fetching'}
         </header>
         <section className={styles.messages}>
-            <div className={styles.messagebox}>
-                Heyy heyeheyehhahahahah
+            {
+                texts.map((text) => {
+
+                    const time = new Date(text.timeStamp * 1000)
+                    const hour = String(time.getHours())
+                    const minute = time.getMinutes()
+                    console.log(text);
+
+                return (
+
+                <div ref={scrollRef} className={text.sender === myUser ? styles.messagebox + ' ' + styles.me : styles.messagebox} key={text.id}>
+                    {text.text}
                 <div>
-                    09:22 AM
+                    { hour.padStart(2, '0') + ' ' + minute }
                 </div>
-                <div className={styles.bubble} />
+                <div className={text.sender === myUser ? styles.bubble + ' ' + styles.alt : styles.bubble} />
             </div>
-            <div className={styles.messagebox}>
-                Heyy heyeheyehhahahahah
-                <div>
-                    09:22 AM
-                </div>
-                <div className={styles.bubble} />
-            </div>
-            <div className={styles.messagebox}>
-                Heyy heyeheyehhahahahah
-                <div>
-                    09:22 AM
-                </div>
-                <div className={styles.bubble} />
-            </div>
-            <div className={styles.messagebox}>
-                Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah
-                <div>
-                    09:22 AM
-                </div>
-                <div className={styles.bubble} />
-            </div>
-            <div className={styles.messagebox + ' ' + styles.me}>
-                Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah
-                <div>
-                    09:22 AM
-                </div>
-                <div className={styles.bubble + ' ' + styles.alt} />
-            </div>
-            <div className={styles.messagebox}>
-                Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah
-                <div>
-                    09:22 AM
-                </div>
-                <div className={styles.bubble} />
-            </div>
-            <div className={styles.messagebox}>
-                Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah
-                <div>
-                    09:22 AM
-                </div>
-                <div className={styles.bubble} />
-            </div>
-            <div className={styles.messagebox}>
-                Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah
-                <div>
-                    09:22 AM
-                </div>
-                <div className={styles.bubble} />
-            </div>
-            <div className={styles.messagebox}>
-                Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah
-                <div>
-                    09:22 AM
-                </div>
-                <div className={styles.bubble} />
-            </div>
-            <div className={styles.messagebox}>
-                Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah
-                <div>
-                    09:22 AM
-                </div>
-                <div className={styles.bubble} />
-            </div>
-            <div className={styles.messagebox + ' ' + styles.me}>
-                Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah Heyy heyeheyehhahahahah
-                <div>
-                    09:22 AM
-                </div>
-                <div className={styles.bubble + ' ' + styles.alt} />
-            </div>
+
+            )})
+            }
         </section>
         <section className={styles.inputfield}>
-            <textarea />
-            <button>
+            <textarea onChange={(e) => setMessageToSend(e.target.value) } value={messageToSend} />
+            <button disabled={messageToSend.length < 1} onClick={handleSend}>
                 <Telegram />
             </button>
         </section>
     </main>
-  )
+) : (
+    <CircularProgress className={styles.progress} />
+)
 }
 
 export default DoctorChats
