@@ -40,7 +40,7 @@ const Messages = () => {
 
     console.log(messages);
 
-    return messages.length !== 0 ? (
+    return messages ? (
 	    <div className={styles.wrapper}>
         <div className={styles.search}>
             {/* <input placeholder='Search message' />
