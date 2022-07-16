@@ -14,6 +14,7 @@ const Discover = () => {
 
     const navigate = useNavigate()
     
+    console.log(doctors)
 
     useEffect(() => {
 
@@ -21,7 +22,7 @@ const Discover = () => {
             const querySnapshot = await getDocs(collection(db, "doctors"));
             querySnapshot.forEach((doc) => {
             if ( doctors.find(val => val.id === doc.id) ) return
-            setDoctors(doctors => [ ...doctors, { id: doc.id, name: doc.data().name, address: doc.data().address } ])
+            setDoctors(doctors => [ ...doctors, { id: doc.id, name: doc.data().name, address: doc.data().address, profilepic: doc.data().profilepic || '' } ])
             })}
         
         getDoctors()

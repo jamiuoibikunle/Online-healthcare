@@ -30,7 +30,7 @@ const Messages = () => {
               const remoteuser = data.filter( each => each !== user )
                 setMessages(messages => [ ...messages, { id: doc.id, lastMessage: doc.data().last_message, user: doc.data()[remoteuser] } ])
             }
-        });
+        })
         
     }
     

@@ -126,7 +126,7 @@ const handleSend = async () => {
           name: remoteuser.user.name,
           profilepic: remoteuser.user.profilepic || ''
         }
-        updatedData[localStorage.getItem('user')] = {
+        updatedData[myUser] = {
             name: mydetails.name,
             profilepic: mydetails.profilepic || ''
         }

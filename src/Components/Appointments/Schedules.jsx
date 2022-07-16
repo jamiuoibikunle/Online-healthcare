@@ -3,7 +3,7 @@ import { ArrowForwardIosRounded } from '@material-ui/icons'
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import styles from './Appointments.module.css'
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, getDocs, collection } from "firebase/firestore";
 import { db } from '../../firebase';
 
 const Schedules = () => {
@@ -22,6 +22,8 @@ const Schedules = () => {
 	const [ btnDisabled, setBtnDisabled ] = useState(false)
 	const [ isError, setIsError ] = useState(false)
 	const [ isDuplicate, setIsDuplicate ] = useState(false)
+
+    const [ availableHospitals, setAvailableHospitals ] = useState([])
 	
 	const dt = new Date();
 	const today = dt.getDate();
@@ -53,6 +55,21 @@ const Schedules = () => {
 		}
 
 	}, [ existingUsers ])
+
+    useEffect(() => {
+
+        const getHospitals = async () => {
+
+            const querySnapshot = await getDocs(collection(db, "clinics"));
+            querySnapshot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                // setAvailableHospitals()
+            });        
+        }
+
+        getHospitals()
+            
+    }, [])
 
 	return (
 		<>
